@@ -144,26 +144,3 @@ def create_vocab(dataset, modeling_unit: str, text_column_name: str) -> Dict[str
         vocab_dict["|"] = vocab_dict[" "]
         del vocab_dict[" "]
     return vocab_dict
-
-
-def dump_train_results(output_dir: str, train_results: List) -> None:
-    """Dump the training results to a log file.
-
-    Args:
-        output_dir (str): The output dir to create the log file.
-        train_results (List): The training results (the state.log_history)
-    """
-
-    log_file = os.path.join(output_dir, 'training.log')
-    train_keys_to_keep = ['epoch', 'train_runtime', 'train_loss',
-                          'train_ins', 'train_sub', 'train_del','train_cer']
-    eval_keys_to_keep = ['epoch', 'eval_loss', 'eval_ins', 'eval_sub', 'eval_del', 'eval_cer']
-
-    train_res = [item for item in train_results if 'train_cer' in item]
-    eval_res = [item for item in train_results if 'eval_cer' in item]
-
-    train_df = pd.DataFrame(train_res, columns=train_keys_to_keep)
-    eval_df = pd.DataFrame(eval_res, columns=eval_keys_to_keep)
-    df = pd.merge(train_df, eval_df, on=['epoch'])
-
-    df.to_csv(log_file, index=False)
