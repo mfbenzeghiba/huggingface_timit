@@ -81,7 +81,7 @@ if [ ! -d "$output_dir" ]; then
   mkdir -p "$output_dir";
 fi
 
-python run_wav2vec2_asr.py \
+python run_wav2vec2_timit.py \
     --audio_column_name=$audio_column_name \
     --activation_dropout=$activation_dropout \
     --attention_dropout=$attention_dropout \
