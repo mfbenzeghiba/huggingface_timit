@@ -20,11 +20,28 @@ Train, valid and test files contain `3692`, `400` and `192` files respectively.
 Training is performed with the `finetune_timit.sh`. This script define the training arguments and the model parameters,
 and launch the main training script `run_wav2vec2_timit.py`.
 
-1. Although the TIMIT dataset was released with a set of 61 phonems, In practice, this set is often reduced to 48 or 39 phonemes.
-To wich set the original 61 phonemes will be reduced to is specified with the **phone_mapping_key** argument.
-2. The best model is selected according to the phoneme/character edit distance computed on 
+> [!NOTE]
+  Although the TIMIT dataset was released with a set of 61 phonems, in practice, this set is often reduced to 48 or 39 phonemes.
+To wich set the original 61 phonemes will be reduced to is specified with the `phone_mapping_key` argument.
+
+> [!IMPORTANT]
+   The best model is selected according to the phoneme/character edit distance computed on 
 the validation set. Since some phonemes are composed of two characters, **to compute the edit distance correctly,
-it is _extremly_ important to set the argument 'spaces_between_special_tokens=True'.** in the batch_decode method.
+it is _extremly_ important to set the argument `spaces_between_special_tokens=True`.** in the batch_decode method.
 
 ## Evaluation
+
 Evaluation of the best model is performed with the `eval_model.py` script.
+This will run the evaluation of the model on the eval file for a phonemes recognition task with a reduced set of 39 phonemes.
+```
+eval_model.py
+  --model_path <best_checkpoint>
+  --phone_mapping_file phones.60-48-39.map.txt
+  --eval_file <the processed csv file>
+  --phone_mapping_key '61to39'
+  --modeling_unit phoneme
+  --audio_column_name 'audio'
+  --text_column_name 'phonetic'
+```
+
+When the model is evaluated on the character recognition task, the `--phone_mapping_key` is not needed.
