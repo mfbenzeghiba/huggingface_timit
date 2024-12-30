@@ -44,4 +44,4 @@ eval_model.py
   --text_column_name 'phonetic'
 ```
 
-When the model is evaluated on the character recognition task, the `--phone_mapping_key` is not needed.
+When the model is evaluated on the character recognition task, the `--phone_mapping_key` and the `--phone_mapping_file` arguments are not needed.
