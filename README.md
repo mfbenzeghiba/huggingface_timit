@@ -27,7 +27,7 @@ To wich set the original 61 phonemes will be reduced to is specified with the `p
 > [!IMPORTANT]
    The best model is selected according to the phoneme/character edit distance computed on 
 the validation set. Since some phonemes are composed of two characters, **to compute the edit distance correctly,
-it is _extremly_ important to set the argument `spaces_between_special_tokens=True`.** in the batch_decode method.
+it is _extremly_ important to set the argument `spaces_between_special_tokens=True`** in the batch_decode method.
 
 ## Evaluation
 
