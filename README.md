@@ -21,8 +21,8 @@ Training is performed with the `finetune_timit.sh`. This script define the train
 and launch the main training script `run_wav2vec2_timit.py`.
 
 > [!NOTE]
-  Although the TIMIT dataset was released with a set of 61 phonems, in practice, this set is often reduced to 48 or 39 phonemes.
-To wich set the original 61 phonemes will be reduced to is specified with the `phone_mapping_key` argument.
+  Although the TIMIT dataset was released with a set of 61 phonemes, in practice, this set is often reduced to 48 or 39 phonemes.
+Wich set the original 61 phonemes will be reduced to is specified with the `phone_mapping_key` argument.
 
 > [!IMPORTANT]
    The best model is selected according to the phoneme/character edit distance computed on 
