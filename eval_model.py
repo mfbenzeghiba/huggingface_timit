@@ -4,10 +4,9 @@ import argparse
 from transformers import Wav2Vec2Processor, Wav2Vec2ForCTC
 import torch
 import soundfile as sf
-from evaluate import load
-
 
 from data_processing.process_data import create_dataset, read_phone_mapping
+from metric_utils import compute_token_errors
 
 
 def parse_args() ->  argparse.Namespace:
@@ -33,9 +32,12 @@ def parse_args() ->  argparse.Namespace:
     parser.add_argument('--text_column_name', type=str,
             default='phonetic',
             choices=['phonetic','text'],
-            help="Name of the transcription column. 'phonetic' for phoneme and 'text' for character.")
+            help="Name of the transcription column. 'phonetic' for phoneme \
+                 and 'text' for character.")
+
     args = parser.parse_args()
     return args
+
 
 def main(options: dict):
     """Main function to do the evaluation.
@@ -56,10 +58,10 @@ def main(options: dict):
                                   options.modeling_unit,
                                   phone_mapping)
 
-    wer = load('wer', trust_remote_code=True)
     total_errors = 0
-    
-    for audio, phone_sequence in zip(eval_dataset[options.audio_column_name], eval_dataset[options.text_column_name]):
+    audio_col_name = options.audio_column_name
+    text_col_name = options.text_column_name
+    for audio, phone_sequence in zip(eval_dataset[audio_col_name], eval_dataset[text_col_name]):
         audio_file = audio['path']
         audio_input, _ = sf.read(audio_file)
         inputs = processor(audio_input, sampling_rate=16_000, return_tensors="pt", padding=False)
@@ -71,14 +73,15 @@ def main(options: dict):
             predicted_ids[predicted_ids == -100] = processor.tokenizer.pad_token_id
             predicted = processor.batch_decode(predicted_ids, spaces_between_special_tokens=True)[0]
             if options.modeling_unit == 'char':
-                phone_sequence = ' '.join(list(phone_sequence))
-            predicted = predicted.replace('<s>', ' ')
-            wer_score = wer.compute(predictions=[predicted], references=[reference])
-            total_errors += wer_score
+                reference = ' '.join(list(reference))
+                reference = reference.replace('   ', ' <s> ')
+                predicted = predicted.replace('   ', ' <s> ')
+            seq_error = compute_token_errors(refs=[predicted], hyps=[reference])
+            total_errors += seq_error['token_errors']
 
-            print("reference:", phone_sequence)
+            print("reference:", reference)
             print("predicted:", predicted)
-            print('Phone Error Rate:', round(wer_score, 3))
+            print('Phone Error Rate:', round(seq_error['token_errors'], 3))
             print("--")
 
     print('Total Error Rate:', round(total_errors/len(eval_dataset), 3))

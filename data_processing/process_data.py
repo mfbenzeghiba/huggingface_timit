@@ -88,8 +88,8 @@ def reduce_phoneset(item: str, phone_mapping: Dict[str, str] = None) -> str:
     """
 
     if phone_mapping is not None:
-        sentence = item['phonetic'].split()
-        item['phonetic'] = ' '.join([phone_mapping[x] for x in sentence])
+        s = item['phonetic'].split()
+        item['phonetic'] = ' '.join([phone_mapping[x] for x in s])
 
     return item
 
@@ -121,13 +121,15 @@ def create_dataset(csv_file: str, audio_column_name: str, modeling_unit: str='ch
     return dataset
 
 
-def create_vocab(dataset, modeling_unit: str, text_column_name: str) -> Dict[str, int]:
+def create_vocab(dataset, modeling_unit: str, text_column_name: str,
+                 word_delimiter_token: str="|") -> Dict[str, int]:
     """Create the vocab.
 
     Args:
         dataset (_type_): The dataset.
         modeling_unit (str): The modeling unit, 'phoneme' or 'char.
         text_column_name (str): The name of the column.
+        word_delimiter_token (str): The word delimiter token.
 
     Returns:
         dict: The phoneme/char vocabulary 
@@ -141,6 +143,28 @@ def create_vocab(dataset, modeling_unit: str, text_column_name: str) -> Dict[str
 
     vocab_dict = {v: k for k, v in enumerate(sorted(vocab_list))}
     if modeling_unit == 'char':
-        vocab_dict["|"] = vocab_dict[" "]
+        vocab_dict[word_delimiter_token] = vocab_dict[" "]
         del vocab_dict[" "]
     return vocab_dict
+
+
+if __name__ == '__main__':
+
+    TRAIN_CSV = 'path_to_processed_train_csv/processed_test.csv'
+    AUDIO_COLUMN_NAME  = 'audio'
+    TEXT_COLUMN_NAME  = 'phonetic' # or text
+    MODELING_UNIT = 'phoneme' # or char
+    PHONE_MAPPING_FILE = 'path_to_phone_mapping_file/phones.60-48-39.map.txt'
+    MAPPING_KEY = '61to39'
+
+    phone_mappings = read_phone_mapping(PHONE_MAPPING_FILE)
+    pm = phone_mappings[MAPPING_KEY]
+
+    data_set = create_dataset(TRAIN_CSV, AUDIO_COLUMN_NAME, MODELING_UNIT, pm)
+    print(data_set['phonetic'])
+
+    vocab = create_vocab(data_set, MODELING_UNIT, TEXT_COLUMN_NAME)
+    for sentence in data_set['phonetic']:
+        s1 = sentence.split()
+        s2 = [pm[p] for p in s1]
+        print(s2)

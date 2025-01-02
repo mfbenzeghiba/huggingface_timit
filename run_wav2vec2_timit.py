@@ -171,6 +171,8 @@ def main():
     pad_token = data_args.pad_token
     if modeling_unit == 'char':
         word_delimiter_token = data_args.word_delimiter_token
+    else:
+        word_delimiter_token = ''
 
     logger.info('Create the tokenizer...')
     if data_args.vocab_file is None:
@@ -181,12 +183,11 @@ def main():
         vocab_dataset = train_dataset
         if training_args.do_eval:
             vocab_dataset = datasets.concatenate_datasets([train_dataset, valid_dataset])
-        vocab_dict = create_vocab(vocab_dataset, modeling_unit, data_args.text_column_name)
+        vocab_dict = create_vocab(vocab_dataset, modeling_unit,
+                                  data_args.text_column_name, word_delimiter_token)
 
         vocab_dict[unk_token] = len(vocab_dict)
         vocab_dict[pad_token] = len(vocab_dict)
-        if modeling_unit == 'char':
-            vocab_dict[word_delimiter_token] = len(vocab_dict)
 
         with open(vocab_file, 'w', encoding='utf-8') as vf:
             json.dump(vocab_dict, vf)
@@ -198,8 +199,7 @@ def main():
         "pad_token": pad_token,
         "unk_token": unk_token
     }
-    if modeling_unit == 'char':
-        tokenizer_kwargs['word_delimiter_toke'] = word_delimiter_token
+    tokenizer_kwargs['word_delimiter_token'] = word_delimiter_token
 
     tokenizer = Wav2Vec2CTCTokenizer(
         vocab_file,

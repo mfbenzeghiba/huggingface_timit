@@ -6,11 +6,11 @@ dataset_name='Timit'
 
 # path to train and valid csv files
 # these files are generate by the prepare_data.py script.
-train_csv='*/processed_train.csv'
-valid_csv='*/processed_valid.csv'
-phone_mapping_file='*/phones.60-48-39.map.txt'
+train_csv='path_to_processed_train_csv/processed_train.csv'
+valid_csv='path_to_procesed_valid_csv/processed_valid.csv'
+phone_mapping_file='path_to_phone_mapping_file/phones.60-48-39.map.txt'
 
-exp_dir='Your_exp_dir'
+exp_dir='path_to_exp_dir'
 
 # path to the vocab file if you have already created one.
 # otherwise the file will be created by the script.
@@ -19,7 +19,7 @@ vocab_file='path_to_the_vocab_file'
 # define the phone set 61to39, 61to48 or 61to61(no reduction)
 phone_mapping_key="61to39"
 audio_column_name='audio'
-modeling_unit='char' # 'phoneme' or 'char'
+modeling_unit='phoneme' # 'phoneme' or 'char'
 
 overwrite_output_dir=true
 overwrite_cache=true
@@ -74,7 +74,7 @@ if [ "$overwrite_output_dir" = "true" ]; then
   optional_args="$optional_args --overwrite_output_dir"
 fi
 
-base_dir="${modeling_unit}_v2"
+base_dir="${modeling_unit}"
 output_dir="${exp_dir}\\${base_dir}"
 echo "$base_dir $output_dir"
 if [ ! -d "$output_dir" ]; then

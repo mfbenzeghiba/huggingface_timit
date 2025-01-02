@@ -122,7 +122,7 @@ def process_dataset(data_dir: str, data_file: str, split: str = 'train',
     }
     # save the data
     fdata = pd.DataFrame(data)
-    fname = os.path.join(data_dir, f'processed_{split}_test.csv')
+    fname = os.path.join(data_dir, f'processed_{split}.csv')
     fdata.to_csv(fname, index=False)
     logging.info('Data preparation is finished...')
     logging.info('The file %s is created...', fname)
@@ -131,10 +131,10 @@ def process_dataset(data_dir: str, data_file: str, split: str = 'train',
 
 if __name__ == "__main__":
 
-    TRAIN_FILE = r'path_to_the_train_data.csv'
-    TEST_FILE = r'path_to_the_test_data.csv'
-    DATA_DIR = r'path_to_the_timit_data'
-    DEV_SPEAKERS_LIST = r'path_to_the_dev_speaker_list.txt'
+    TRAIN_FILE = r'path_to/train_data.csv'
+    TEST_FILE = r'path_to/test_data.csv'
+    DATA_DIR = r'path_to_data_dir/data'
+    DEV_SPEAKERS_LIST = r'dev_speaker_list.txt'
 
     processed_train = process_dataset(data_dir=DATA_DIR,
                                      data_file=TRAIN_FILE,

@@ -72,7 +72,7 @@ class DataTrainingArguments:
     )
     word_delimiter_token: str = field(
         default="|",
-        metadata={"help": "The word delimiter token for the tokenizer"},
+        metadata={"help": "The word delimiter token for the tokenizer."},
     )
     overwrite_cache: bool = field(
         default=False,
