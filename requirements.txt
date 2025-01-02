@@ -1,0 +1,8 @@
+datasets==3.2.0
+numpy==2.2.1
+pandas==2.2.3
+python_Levenshtein==0.26.1
+regex==2.5.148
+soundfile==0.12.1
+torch==2.5.1
+transformers==4.47.1
