@@ -1,8 +1,7 @@
 """Functions to process the data."""
 
-import os
 import logging
-from typing import Dict, List
+from typing import Dict
 from functools import reduce
 import regex
 
@@ -75,6 +74,7 @@ def remove_special_characters(item: str) -> str:
     Returns:
         str: The sentence after removing the special character.
     """
+
     item['text'] = regex.sub('[?,.\\\\!;:"-]', '', item['text']).lower()
     return item
 
@@ -150,21 +150,25 @@ def create_vocab(dataset, modeling_unit: str, text_column_name: str,
 
 if __name__ == '__main__':
 
-    TRAIN_CSV = 'path_to_processed_train_csv/processed_test.csv'
+    CSV_FILE = 'path_to_processed_train_csv/processed_test.csv'
     AUDIO_COLUMN_NAME  = 'audio'
-    TEXT_COLUMN_NAME  = 'phonetic' # or text
-    MODELING_UNIT = 'phoneme' # or char
+    TEXT_COLUMN_NAME  = 'text' # phonetic or text
+    MODELING_UNIT = 'char' # phoneme or char
     PHONE_MAPPING_FILE = 'path_to_phone_mapping_file/phones.60-48-39.map.txt'
     MAPPING_KEY = '61to39'
 
     phone_mappings = read_phone_mapping(PHONE_MAPPING_FILE)
     pm = phone_mappings[MAPPING_KEY]
 
-    data_set = create_dataset(TRAIN_CSV, AUDIO_COLUMN_NAME, MODELING_UNIT, pm)
-    print(data_set['phonetic'])
+    if MODELING_UNIT == 'phoneme':
+        data_set = create_dataset(CSV_FILE, AUDIO_COLUMN_NAME, MODELING_UNIT, pm)
+    else:
+        data_set = create_dataset(CSV_FILE, AUDIO_COLUMN_NAME, MODELING_UNIT)
 
     vocab = create_vocab(data_set, MODELING_UNIT, TEXT_COLUMN_NAME)
     for sentence in data_set['phonetic']:
+        print(f'Sentence: {sentence}')
         s1 = sentence.split()
-        s2 = [pm[p] for p in s1]
-        print(s2)
+        idx = [vocab[p] for p in s1]
+        print(f'Index: {idx}')
+
