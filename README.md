@@ -47,8 +47,8 @@ eval_model.py
 When the model is evaluated on the character recognition task, the `--phone_mapping_key` and the `--phone_mapping_file` arguments are not needed.
 Table bellow reports the results in terms of CER (Character Error Rate) and PER (Phoneme Error Rate) on valid and test datasets.
 
-|       | CER(%) | PER (%)  |
-|:------|:------:|:--------:|
-| Valid | 25.7   | **15.0** |
-| Test  | 27.0   | **16.5** |
+|       | PER (%)  |
+|:------|--------:|
+| Valid | **15.0** |
+| Test  | **16.5** |
 
