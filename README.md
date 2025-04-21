@@ -45,7 +45,7 @@ eval_model.py
 ```
 
 When the model is evaluated on the character recognition task, the `--phone_mapping_key` and the `--phone_mapping_file` arguments are not needed.
-Table bellow reports the results in terms of CER (Character Error Rate) and PER (Phoneme Error Rate) on valid and test datasets.
+Table bellow reports the results in terms of PER (Phoneme Error Rate) on valid and test datasets.
 
 |       | PER (%)  |
 |:------|--------:|
